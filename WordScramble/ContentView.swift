@@ -17,6 +17,7 @@ struct ContentView: View {
     @State private var showingError = false
     @State private var showInvalidWordAlert = false
     @State private var invalidWordMessage = ""
+    @State private var wordCount = 0
     
     var body: some View {
         
@@ -34,6 +35,7 @@ struct ContentView: View {
                         }
                     }
                 }
+                Text("Score: \(wordCount)")
             }
             .toolbar {
                 Button("New Word", action: startGame)
@@ -87,6 +89,7 @@ struct ContentView: View {
         withAnimation {
             usedWords.insert(answer, at: 0)
         }
+        wordCount += newWord.count
         newWord = ""
     }
     
