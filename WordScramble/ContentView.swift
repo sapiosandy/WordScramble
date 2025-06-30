@@ -15,7 +15,8 @@ struct ContentView: View {
     @State private var errorTitle = ""
     @State private var errorMessage = ""
     @State private var showingError = false
-    
+    @State private var showInvalidWordAlert = false
+    @State private var invalidWordMessage = ""
     
     var body: some View {
         
@@ -42,6 +43,11 @@ struct ContentView: View {
             } message: {
                 Text(errorMessage)
             }
+            .alert("Invalid Word", isPresented: $showInvalidWordAlert) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text(invalidWordMessage)
+            }
         }
     }
     func addNewWord() {
@@ -49,7 +55,17 @@ struct ContentView: View {
         let answer = newWord.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
         
         // exit if the remaining string is empty
-        guard answer.count > 0 else { return }
+        guard answer.count > 3 else {
+        invalidWordMessage = "Word must be longer than 3 letters"
+            showInvalidWordAlert = true
+            return
+        }
+        
+        guard answer != rootWord else {
+            invalidWordMessage = "You can't use root word!"
+            showInvalidWordAlert = true
+            return
+        }
         
         guard isOriginal(word: answer) else {
             wordError(title: "Word used already", message: "Be more original")
